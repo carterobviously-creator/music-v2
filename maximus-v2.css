@@ -1,0 +1,205 @@
+/* ============================
+   MAXIMUS V2 — NEON REACTOR UI
+   ============================ */
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  color: #e8faff;
+  font-family: "Segoe UI", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+#app {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ----------------------------
+   HEADER
+----------------------------- */
+
+.mv2-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.mv2-title {
+  font-size: 42px;
+  font-weight: 900;
+  color: #00c8ff;
+  text-shadow: 0 0 20px #00c8ff, 0 0 40px #00c8ff;
+  letter-spacing: 2px;
+}
+
+.mv2-subtitle {
+  font-size: 16px;
+  opacity: 0.7;
+  margin-top: -5px;
+}
+
+/* ----------------------------
+   FULL-WIDTH PROMPT BAR
+----------------------------- */
+
+.mv2-prompt-bar {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.mv2-prompt-bar input {
+  width: 100%;
+  padding: 18px;
+  font-size: 18px;
+  background: #050505;
+  border: 2px solid #00c8ff;
+  border-radius: 6px;
+  color: #e8faff;
+  outline: none;
+
+  box-shadow:
+    0 0 15px #00c8ff,
+    0 0 30px #00c8ff,
+    inset 0 0 10px #00c8ff;
+}
+
+.mv2-prompt-bar input::placeholder {
+  color: #66dfff;
+  opacity: 0.6;
+}
+
+/* ----------------------------
+   CONTROLS
+----------------------------- */
+
+.mv2-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px 0;
+}
+
+.mv2-control-group {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+}
+
+.mv2-control-group label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+#lengthInput {
+  padding: 12px;
+  font-size: 18px;
+  background: #050505;
+  border: 2px solid #00c8ff;
+  border-radius: 6px;
+  color: #e8faff;
+
+  box-shadow:
+    0 0 15px #00c8ff,
+    inset 0 0 10px #00c8ff;
+}
+
+/* ----------------------------
+   GENERATE BUTTON
+----------------------------- */
+
+.mv2-generate-btn {
+  padding: 16px 40px;
+  font-size: 22px;
+  font-weight: bold;
+  background: #00141a;
+  color: #00eaff;
+  border: 2px solid #00c8ff;
+  border-radius: 8px;
+  cursor: pointer;
+
+  box-shadow:
+    0 0 20px #00c8ff,
+    0 0 40px #00c8ff,
+    inset 0 0 10px #00c8ff;
+
+  transition: 0.2s ease;
+}
+
+.mv2-generate-btn:hover {
+  background: #002833;
+  transform: scale(1.03);
+}
+
+.mv2-generate-btn:active {
+  transform: scale(0.98);
+}
+
+/* ----------------------------
+   PROGRESS BAR
+----------------------------- */
+
+.mv2-progress-bar {
+  width: 100%;
+  height: 14px;
+  background: #02222c;
+  border: 2px solid #00c8ff;
+  border-radius: 6px;
+  margin-bottom: 15px;
+
+  box-shadow:
+    0 0 20px #00c8ff,
+    inset 0 0 10px #00c8ff;
+}
+
+.mv2-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: #00eaff;
+  box-shadow: 0 0 20px #00eaff;
+  transition: width 0.2s linear;
+}
+
+/* ----------------------------
+   TERMINAL LOG
+----------------------------- */
+
+.mv2-log {
+  width: 100%;
+  height: 220px;
+  background: #050505;
+  border: 2px solid #00c8ff;
+  border-radius: 6px;
+  padding: 12px;
+  overflow-y: auto;
+  font-size: 14px;
+  color: #9ff6ff;
+
+  box-shadow:
+    0 0 20px #00c8ff,
+    inset 0 0 15px #00c8ff;
+}
+
+/* ----------------------------
+   WAVEFORM PANEL
+----------------------------- */
+
+.mv2-waveform-panel {
+  margin-top: 25px;
+  padding: 15px;
+  background: #050505;
+  border: 2px solid #00c8ff;
+  border-radius: 6px;
+
+  box-shadow:
+    0 0 25px #00c8ff,
+    inset 0 0 15px #00c8ff;
+}
+
+#waveformCanvas {
+  width: 100%;
+  height: 180px;
+}
