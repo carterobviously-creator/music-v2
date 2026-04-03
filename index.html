@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Riffusion Longform Generator</title>
+<style>
+  body { background:#111; color:#eee; font-family:Arial; padding:20px; }
+  button { padding:10px 20px; font-size:16px; }
+  #log { white-space:pre-wrap; margin-top:20px; font-family:monospace; }
+</style>
+</head>
+<body>
+
+<h2>Riffusion Mini Long‑Form Generator</h2>
+<p>Generates ~3 minutes by chaining 4‑second clips.</p>
+
+<button id="startBtn">Generate 3‑Minute Track</button>
+
+<div id="log"></div>
+
+<script>
+// ------------------------------
+// CONFIG
+// ------------------------------
+const MODEL_URL = "riffusion-mini.onnx";   // put the 17MB model next to this HTML file
+const SEGMENT_SECONDS = 4;                 // each generation is ~4 seconds
+const TARGET_SECONDS = 180;                // 3 minutes
+const NUM_SEGMENTS = Math.ceil(TARGET_SECONDS / SEGMENT_SECONDS);
+const SAMPLE_RATE = 44100;
+
+// ------------------------------
+// LOGGING
+// ------------------------------
+function log(msg) {
+  document.getElementById("log").textContent += msg + "\n";
+}
+
+// ------------------------------
+// WAV EXPORT
+// ------------------------------
+function exportWav(float32Array) {
+  const buffer = new ArrayBuffer(44 + float32Array.length * 2);
+  const view = new DataView(buffer);
+
+  function writeString(offset, str) {
+    for (let i = 0; i < str.length; i++) {
+      view.setUint8(offset + i, str.charCodeAt(i));
+    }
+  }
+
+  writeString(0, "RIFF");
+  view.setUint32(4, 36 + float32Array.length * 2, true);
+  writeString(8, "WAVE");
+  writeString(12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, SAMPLE_RATE, true);
+  view.setUint32(28, SAMPLE_RATE * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  writeString(36, "data");
+  view.setUint32(40, float32Array.length * 2, true);
+
+  let offset = 44;
+  for (let i = 0; i < float32Array.length; i++) {
+    let s = Math.max(-1, Math.min(1, float32Array[i]));
+    view.setInt16(offset, s * 0x7fff, true);
+    offset += 2;
+  }
+
+  const blob = new Blob([buffer], { type: "audio/wav" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "riffusion-longform.wav";
+  a.click();
+}
+
+// ------------------------------
+// MAIN GENERATION LOOP
+// ------------------------------
+async function generateLongform() {
+  log("Loading ONNX model…");
+
+  const session = await ort.InferenceSession.create(MODEL_URL);
+
+  log("Model loaded.");
+  log("Generating " + NUM_SEGMENTS + " segments…");
+
+  let finalAudio = new Float32Array(0);
+  let prevAudio = null;
+
+  for (let i = 0; i < NUM_SEGMENTS; i++) {
+    log("Segment " + (i+1) + "/" + NUM_SEGMENTS);
+
+    // Fake input for demo — replace with real conditioning
+    const input = new ort.Tensor("float32", new Float32Array(512).fill(0), [1,512]);
+
+    const output = await session.run({ "input": input });
+    const audio = output["audio"].data;  // Float32Array
+
+    // Crossfade with previous
+    if (prevAudio) {
+      const fade = 2048;
+      for (let j = 0; j < fade; j++) {
+        const t = j / fade;
+        audio[j] = prevAudio[prevAudio.length - fade + j] * (1 - t) + audio[j] * t;
+      }
+    }
+
+    // Append
+    const merged = new Float32Array(finalAudio.length + audio.length);
+    merged.set(finalAudio, 0);
+    merged.set(audio, finalAudio.length);
+    finalAudio = merged;
+
+    prevAudio = audio;
+  }
+
+  log("Done. Exporting WAV…");
+  exportWav(finalAudio);
+  log("Finished.");
+}
+
+// ------------------------------
+// BUTTON
+// ------------------------------
+document.getElementById("startBtn").onclick = () => {
+  generateLongform();
+};
+</script>
+
+<!-- ONNX Runtime Web -->
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+
+</body>
+</html>
