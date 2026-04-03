@@ -1,0 +1,48 @@
+.body {
+  background-color: #1a1a1a;
+  color: #e6e6e6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+}
+
+a {
+  color: #0ff;
+  text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+}
+
+a:hover {
+  color: #ff0;
+  text-shadow: 0 0 5px #ff0, 0 0 10px #ff0;
+}
+
+.button {
+  background-color: #333;
+  border: 1px solid #0ff;
+  color: #0ff;
+  padding: 10px 20px;
+  text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #0ff;
+  color: #000;
+}
+
+.card {
+  background-color: #222;
+  border: 1px solid #0ff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,255,255,0.5);
+}
+
+.footer {
+  background-color: #111;
+  color: #e6e6e6;
+  text-align: center;
+  padding: 10px;
+  border-top: 1px solid #0ff;
+}
